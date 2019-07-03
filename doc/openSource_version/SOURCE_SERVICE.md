@@ -1,4 +1,19 @@
 # Service
+## Object Detection Service
+* download and convert a trained model to produce an optimized Intermediate Representation (IR) of the model 
+```bash
+cd /opt/openvino_toolkit/open_model_zoo/model_downloader
+python3 ./downloader.py --name mobilenet-ssd
+#FP32 precision model
+sudo python3 /opt/openvino_toolkit/dldt/model-optimizer/mo.py --input_model /opt/openvino_toolkit/open_model_zoo/model_downloader/object_detection/common/mobilenet-ssd/caffe/mobilenet-ssd.caffemodel --output_dir /opt/openvino_toolkit/open_model_zoo/model_downloader/object_detection/common/mobilenet-ssd/caffe/output/FP32 --mean_values [127.5,127.5,127.5] --scale_values [127.5]
+#FP16 precision model
+sudo python3 /opt/openvino_toolkit/dldt/model-optimizer/mo.py --input_model /opt/openvino_toolkit/open_model_zoo/model_downloader/object_detection/common/mobilenet-ssd/caffe/mobilenet-ssd.caffemodel --output_dir /opt/openvino_toolkit/open_model_zoo/model_downloader/object_detection/common/mobilenet-ssd/caffe/output/FP16 --data_type=FP16 --mean_values [127.5,127.5,127.5] --scale_values [127.5]
+```
+* copy label files (excute _once_)<br>
+```bash
+sudo cp /opt/openvino_toolkit/ros2_openvino_toolkit/data/labels/object_detection/mobilenet-ssd.labels /opt/openvino_toolkit/open_model_zoo/model_downloader/object_detection/common/mobilenet-ssd/caffe/output/FP32
+sudo cp /opt/openvino_toolkit/ros2_openvino_toolkit/data/labels/object_detection/mobilenet-ssd.labels /opt/openvino_toolkit/open_model_zoo/model_downloader/object_detection/common/mobilenet-ssd/caffe/output/FP16
+```
 * run object detection service sample code input from Image  
   Run image processing service:
 	```bash
@@ -8,6 +23,20 @@
 	```bash
 	ros2 run dynamic_vino_sample image_object_client ~/Pictures/car.png
 	```
+## People Detection Service
+* download the optimized Intermediate Representation (IR) of model (excute _once_)<br>
+```bash
+cd /opt/openvino_toolkit/open_model_zoo/model_downloader
+python3 downloader.py --name face-detection-adas-0001
+python3 downloader.py --name age-gender-recognition-retail-0013
+python3 downloader.py --name emotions-recognition-retail-0003
+python3 downloader.py --name head-pose-estimation-adas-0001
+```
+* copy label files (excute _once_)<br>
+```bash
+sudo cp /opt/openvino_toolkit/ros2_openvino_toolkit/data/labels/emotions-recognition/FP32/emotions-recognition-retail-0003.labels /opt/openvino_toolkit/open_model_zoo/model_downloader/Retail/object_attributes/emotions_recognition/0003/dldt
+sudo cp /opt/openvino_toolkit/ros2_openvino_toolkit/data/labels/face_detection/face-detection-adas-0001.labels /opt/openvino_toolkit/open_model_zoo/model_downloader/Transportation/object_detection/face/pruned_mobilenet_reduced_ssd_shared_weights/dldt
+```
 * run face detection service sample code input from Image  
   Run image processing service:
 	```bash
