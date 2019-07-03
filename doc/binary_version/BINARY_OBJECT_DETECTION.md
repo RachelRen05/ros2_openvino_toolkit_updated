@@ -77,7 +77,11 @@ cd ~/code/darkflow
 --data_type FP16 \
 --output_dir ./output/fp16
 ```
-
+* copy label files (excute _once_)<br>
+```bash
+sudo cp /opt/openvino_toolkit/ros2_openvino_toolkit/data/labels/object_detection/yolov2-voc.labels /opt/openvino_toolkit/darkflow/output/fp32
+sudo cp /opt/openvino_toolkit/ros2_openvino_toolkit/data/labels/object_detection/yolov2-voc.labels /opt/openvino_toolkit/darkflow/output/fp16
+```
 * run object detection sample code input from RealSenseCamera.(connect Intel® Neural Compute Stick 2)
 ```bash
 ros2 launch dynamic_vino_sample pipeline_object_yolo.launch.py
