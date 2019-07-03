@@ -22,41 +22,71 @@ ros2 launch dynamic_vino_sample pipeline_object_oss.launch.py
 ```bash
 ros2 launch dynamic_vino_sample pipeline_object_oss_topic.launch.py
 ```
-## YOLOv3
-* Dump YOLOv3 TenorFlow* Model
-  - Clone the repository: 
+## YOLOv2-voc
+* Darkflow to protobuf(.pb)
+  - install [darkflow](https://github.com/thtrieu/darkflow)
+    - install prerequsites
+    ```bash
+    pip3 install tensorflow opencv-python numpy networkx cython
+    ```
+    - Get darkflow and YOLO-OpenVINO
+    ```bash
+    mkdir -p ~/code && cd ~/code
+    git clone https://github.com/thtrieu/darkflow
+    git clone https://github.com/chaoli2/YOLO-OpenVINO
+    sudo ln -sf ~/code/darkflow /opt/openvino_toolkit/
+    ```
+    - modify the line self.offset = 16 in the ./darkflow/utils/loader.py file and replace with self.offset = 20
+    - Install darkflow
+    ```bash
+    cd ~/code/darkflow
+    pip3 install .
+    ```
+  - Copy voc.names in YOLO-OpenVINO/common to labels.txt in darkflow.
   ```bash
-  mkdir -p ~/code && cd ~/code
-  git clone https://github.com/mystic123/tensorflow-yolo-v3.git
-  sudo ln -sf ~/code/tensorflow-yolo-v3 /opt/openvino_toolkit/
+  cp ~/code/YOLO-OpenVINO/common/voc.names ~/code/darkflow/labels.txt
   ```
-  - Download [coco.names](https://raw.githubusercontent.com/pjreddie/darknet/master/data/coco.names) file from the DarkNet website OR use labels that fit your task. </br>
+  - Get yolov2 weights and cfg
   ```bash
-  cd ~/code/tensorflow-yolo-v3
-  wget https://raw.githubusercontent.com/pjreddie/darknet/master/data/coco.names
+  cd ~/code/darkflow
+  mkdir -p models
+  cd models
+  wget -c https://pjreddie.com/media/files/yolov2-voc.weights
+  wget https://raw.githubusercontent.com/pjreddie/darknet/master/cfg/yolov2-voc.cfg
   ```
-  - Download the weights file: 
+  - Run convert script
   ```bash
-  cd ~/code/tensorflow-yolo-v3
-  wget https://pjreddie.com/media/files/yolov3.weights
+  cd ~/code/darkflow
+  flow --model models/yolov2-voc.cfg --load models/yolov2-voc.weights --savepb
   ```
-  - Run a converter: 
-  ```bash
-  cd ~/code/tensorflow-yolo-v3
-  python3 convert_weights_pb.py --class_names coco.names --data_format NHWC --weights_file yolov3.weights
-  ```
-* Convert YOLOv3 TensorFlow Model to the IR
+* Convert YOLOv2-voc TensorFlow Model to the optimized Intermediate Representation (IR) of model
 ```bash
-#FP32 precision model
-sudo python3 /opt/openvino_toolkit/dldt/model-optimizer/mo.py --input_model ~/code/tensorflow-yolo-v3/frozen_darknet_yolov3_model.pb --tensorflow_use_custom_operations_config /opt/openvino_toolkit/dldt/model-optimizer/extensions/front/tf/yolo_v3.json --input_shape=[1,416,416,3] --data_type=FP32 --output_dir /opt/openvino_toolkit/tensorflow-yolo-v3/output/FP32   
-#FP16 precision model
-sudo python3 /opt/openvino_toolkit/dldt/model-optimizer/mo.py --input_model ~/code/tensorflow-yolo-v3/frozen_darknet_yolov3_model.pb --tensorflow_use_custom_operations_config /opt/openvino_toolkit/dldt/model-optimizer/extensions/front/tf/yolo_v3.json --input_shape=[1,416,416,3] --data_type=FP16 --output_dir /opt/openvino_toolkit/tensorflow-yolo-v3/output/FP16   
+cd ~/code/darkflow
+# FP32 precision model
+/opt/openvino_toolkit/dldt/model-optimizer/model_optimizer/mo_tf.py \
+--input_model built_graph/yolov2-voc.pb \
+--batch 1 \
+--tensorflow_use_custom_operations_config /opt/openvino_toolkit/dldt/model-optimizer/extensions/front/tf/yolo_v1_v2.json \
+--data_type FP32 \
+--output_dir ./output/fp32
+# FP16 precision model
+/opt/openvino_toolkit/dldt/model-optimizer/mo_tf.py \
+--input_model built_graph/yolov2-voc.pb \
+--batch 1 \
+--tensorflow_use_custom_operations_config /opt/openvino_toolkit/dldt/model-optimizer/extensions/front/tf/yolo_v1_v2.json \
+--data_type FP16 \
+--output_dir ./output/fp16
+```
+* copy label files (excute _once_)<br>
+```bash
+sudo cp /opt/openvino_toolkit/ros2_openvino_toolkit/data/labels/object_detection/yolov2-voc.labels /opt/openvino_toolkit/darkflow/output/fp32
+sudo cp /opt/openvino_toolkit/ros2_openvino_toolkit/data/labels/object_detection/yolov2-voc.labels /opt/openvino_toolkit/darkflow/output/fp16
 ```
 * run object detection sample code input from RealSenseCamera.(connect Intel® Neural Compute Stick 2)
 ```bash
-ros2 launch dynamic_vino_sample pipeline_object_yolov3_oss.launch.py
+ros2 launch dynamic_vino_sample pipeline_object_yolov_oss.launch.py
 ```
 * run object detection sample code input from RealSenseCameraTopic.(connect Intel® Neural Compute Stick 2)
 ```bash
-ros2 launch dynamic_vino_sample pipeline_object_yolov3_oss_topic.launch.py
+ros2 launch dynamic_vino_sample pipeline_object_yolov_topic_oss.launch.py
 ```
