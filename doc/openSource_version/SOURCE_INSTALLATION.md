@@ -4,7 +4,7 @@
 The [OpenVINO™](https://software.intel.com/en-us/openvino-toolkit) toolkit quickly deploys applications and solutions that emulate human vision. Based on Convolutional Neural Networks (CNN), the Toolkit extends computer vision (CV) workloads across Intel® hardware, maximizing performance.
 
 This project is a ROS2 wrapper for CV API of [OpenVINO™](https://software.intel.com/en-us/openvino-toolkit), providing the following features:
-* Support CPU, GPU and Intel® Neural Compute Stick 2 platforms
+* Support CPU and GPU platforms
 * Support standard USB camera and Intel® RealSense™ camera
 * Support Video or Image file as detection source
 * Face detection
@@ -20,7 +20,11 @@ This project is a ROS2 wrapper for CV API of [OpenVINO™](https://software.inte
 	* Intel® Xeon® v5 family
 	* Intel®  Xeon® v6 family
 - ROS2 [Dashing](https://github.com/ros2/ros2/wiki)
-- [OpenVINO™ Toolkit](https://software.intel.com/en-us/openvino-toolkit)
+
+- OpenVINO™ Toolkit Open Source<br>
+  	* The [Deep Learning Deployment Toolkit](https://github.com/opencv/dldt) that helps to enable fast, heterogeneous deep learning inferencing for Intel® processors (CPU and GPU/Intel® Processor Graphics), and supports more than 100 public and custom models.<br>
+	* [Open Model Zoo](https://github.com/opencv/open_model_zoo) includes 20+ pre-trained deep learning models to expedite development and improve deep learning inference on Intel® processors (CPU, Intel Processor Graphics, FPGA, VPU), along with many samples to easily get started.
+
 - RGB Camera, e.g. RealSense D400 Series or standard USB camera or Video/Image File
 - Graphics are required only if you use a GPU. The official system requirements for GPU are:
 	* 6th to 8th generation Intel® Core™ processors with Iris® Pro graphics and Intel® HD Graphics
@@ -35,44 +39,71 @@ This project is a ROS2 wrapper for CV API of [OpenVINO™](https://software.inte
 ## 3. Environment Setup
 **Note**:You can choose to build the environment using *./environment_setup_binary.sh* script in the script subfolder.The *modules.conf* file in the same directory as the .sh file is the configuration file that controls the installation process.You can modify the *modules.conf* to customize your installation process.
 ```bash
-./environment_setup_binary.sh
+./environment_setup.sh
 ```
 **Note**:You can also choose to follow the steps below to build the environment step by step.
 * Install ROS2 [Dashing](https://github.com/ros2/ros2/wiki) ([guide](https://index.ros.org/doc/ros2/Installation/Linux-Development-Setup/))<br>
-* Install [OpenVINO™ Toolkit](https://software.intel.com/en-us/openvino-toolkit) ([guide](https://software.intel.com/en-us/articles/OpenVINO-Install-Linux))<br>
-    	**Note**: Please use  *root privileges* to run the installer when installing the core components.
-* Install OpenCL Driver for GPU
-	```bash
-	mkdir -p ~/code && cd ~/code
-	wget https://github.com/intel/compute-runtime/releases/download/19.04.12237/intel-gmmlib_18.4.1_amd64.deb
-	wget https://github.com/intel/compute-runtime/releases/download/19.04.12237/intel-igc-core_18.50.1270_amd64.deb
-	wget https://github.com/intel/compute-runtime/releases/download/19.04.12237/intel-igc-opencl_18.50.1270_amd64.deb
-	wget https://github.com/intel/compute-runtime/releases/download/19.04.12237/intel-opencl_19.04.12237_amd64.deb
-	wget https://github.com/intel/compute-runtime/releases/download/19.04.12237/intel-ocloc_19.04.12237_amd64.deb
-	sudo dpkg -i *.deb
-	```
-* Install [OpenCV 3.4 or later](https://docs.opencv.org/master/d9/df8/tutorial_root.html)([guide](https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html))
-	```bash
-	[compiler] sudo apt-get install build-essential
-	[required] sudo apt-get install cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
-	[optional] sudo apt-get install python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev 
-	mkdir -p ~/code && cd ~/code
-	git clone https://github.com/opencv/opencv.git
-	git clone https://github.com/opencv/opencv_contrib.git
-	cd opencv && git checkout 3.4.2 && cd ..
-	cd opencv_contrib && git checkout 3.4.2 && cd ..
-	cd opencv
-	mkdir build && cd build
-	cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local -D OPENCV_EXTRA_MODULES_PATH=/home/<hostname>/code/opencv_contrib/modules/ ..
-	make -j8
-	sudo make install
-	```
-	* Additional steps are required on ubuntu 18.04
+* Install OpenVINO™ Toolkit Open Source<br>
+	* Install [OpenCV 3.4.2](https://docs.opencv.org/master/d9/df8/tutorial_root.html)([guide](https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html))
 		```bash
-		sudo add-apt-repository "deb http://security.ubuntu.com/ubuntu xenial-security main"
-		sudo apt update
-		sudo apt install libjasper1 libjasper-dev
+		[compiler] sudo apt-get install build-essential
+		[required] sudo apt-get install cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
+		[optional] sudo apt-get install python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev 
+		cd ~/code
+		git clone https://github.com/opencv/opencv.git
+		git clone https://github.com/opencv/opencv_contrib.git
+		cd opencv && git checkout 3.4.2 && cd ..
+		cd opencv_contrib && git checkout 3.4.2 && cd ..
+		cd opencv
+		mkdir build && cd build
+		cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local -D OPENCV_EXTRA_MODULES_PATH=/home/<hostname>/code/opencv_contrib/modules/ ..
+		make -j8
+		sudo make install
 		```
+		* Additional steps are required on ubuntu 18.04
+			```bash
+			sudo add-apt-repository "deb http://security.ubuntu.com/ubuntu xenial-security main"
+			sudo apt update
+			sudo apt install libjasper1 libjasper-dev
+			```
+	* Install OpenCL Driver for GPU<br>
+		```bash
+		cd ~/Downloads
+		wget https://github.com/intel/compute-runtime/releases/download/19.04.12237/intel-gmmlib_18.4.1_amd64.deb
+		wget https://github.com/intel/compute-runtime/releases/download/19.04.12237/intel-igc-core_18.50.1270_amd64.deb
+		wget https://github.com/intel/compute-runtime/releases/download/19.04.12237/intel-igc-opencl_18.50.1270_amd64.deb
+		wget https://github.com/intel/compute-runtime/releases/download/19.04.12237/intel-opencl_19.04.12237_amd64.deb
+		wget https://github.com/intel/compute-runtime/releases/download/19.04.12237/intel-ocloc_19.04.12237_amd64.deb
+		sudo dpkg -i *.deb
+		```
+	* Install [Deep Learning Deployment Toolkit](https://github.com/opencv/dldt)([guide](https://github.com/opencv/dldt/tree/2018/inference-engine))<br>
+		```bash
+		mkdir ~/code && cd ~/code
+		git clone https://github.com/opencv/dldt.git
+		cd dldt/inference-engine/
+		git checkout 2019_R1.1
+		git submodule init
+		git submodule update --recursive
+		./install_dependencies.sh
+		mkdir build && cd build
+		cmake -DCMAKE_BUILD_TYPE=Release ..
+		make -j8
+		sudo mkdir -p /opt/openvino_toolkit
+		sudo ln -sf ~/code/dldt /opt/openvino_toolkit/dldt
+		```
+	* Install [Open Model Zoo](https://github.com/opencv/open_model_zoo)([guide](https://github.com/opencv/open_model_zoo/tree/2018/demos))<br>
+		```bash
+		cd ~/code
+		git clone https://github.com/opencv/open_model_zoo.git
+		cd open_model_zoo/demos/
+		git checkout 2019
+		mkdir build && cd build
+		cmake -DCMAKE_BUILD_TYPE=Release /opt/openvino_toolkit/dldt/inference-engine
+		make -j8
+		sudo mkdir -p /opt/openvino_toolkit
+		sudo ln -sf ~/code/open_model_zoo /opt/openvino_toolkit/open_model_zoo
+		```
+	
 - Install Intel® RealSense™ SDK 2.0 [(tag v2.23.0)](https://github.com/IntelRealSense/librealsense/tree/v2.23.0)<br>
 	* [Install from package](https://github.com/IntelRealSense/librealsense/blob/v2.23.0/doc/distribution_linux.md)<br>
 
@@ -81,29 +112,30 @@ This project is a ROS2 wrapper for CV API of [OpenVINO™](https://software.inte
 	#librealsense dependency
 	sudo apt-get install -y libssl-dev libusb-1.0-0-dev pkg-config libgtk-3-dev
 	sudo apt-get install -y libglfw3-dev libgl1-mesa-dev libglu1-mesa-dev
-	# numpy and networkx
+	# numpy
 	pip3 install numpy
 	pip3 install networkx
-	# libboost
-	sudo apt-get install -y --no-install-recommends libboost-all-dev
-	cd /usr/lib/x86_64-linux-gnu
-	sudo ln -sf libboost_python-py35.so libboost_python3.so
 	```
+	* Ubuntu 16.04
+		```bash
+		# libboost
+		sudo apt-get install -y --no-install-recommends libboost-all-dev
+		cd /usr/lib/x86_64-linux-gnu
+		sudo ln -sf libboost_python-py35.so libboost_python3.so
+		```
+	* Ubuntu 18.04
+		```bash
+		#libboost
+		sudo apt-get install -y --no-install-recommends libboost-all-dev
+		sudo apt install libboost-python1.62.0
+		```
 ## 4. Building and Installation
-* Build sample code under openvino toolkit
+
+* set ENV InferenceEngine_DIR, CPU_EXTENSION_LIB and GFLAGS_LIB
 	```bash
-	# root is required instead of sudo
-	source /opt/intel/openvino/bin/setupvars.sh
-	cd /opt/intel/openvino/deployment_tools/inference_engine/samples/
-	mkdir build
-	cd build
-	cmake ..
-	make
-	```
-* set ENV CPU_EXTENSION_LIB and GFLAGS_LIB
-	```bash
-	export CPU_EXTENSION_LIB=/opt/intel/openvino/deployment_tools/inference_engine/samples/build/intel64/Release/lib/libcpu_extension.so
-	export GFLAGS_LIB=/opt/intel/openvino/deployment_tools/inference_engine/samples/build/intel64/Release/lib/libgflags_nothreads.a
+	export InferenceEngine_DIR=/opt/openvino_toolkit/dldt/inference-engine/build/
+	export CPU_EXTENSION_LIB=/opt/openvino_toolkit/dldt/inference-engine/bin/intel64/Release/lib/libcpu_extension.so
+	export GFLAGS_LIB=/opt/openvino_toolkit/dldt/inference-engine/bin/intel64/Release/lib/libgflags_nothreads.a
 	```
 * Install ROS2_OpenVINO packages
 	```bash
@@ -120,14 +152,13 @@ This project is a ROS2 wrapper for CV API of [OpenVINO™](https://software.inte
 * Build package
 	```
 	source ~/ros2_ws/install/local_setup.bash
-	source /opt/intel/openvino/bin/setupvars.sh
-	export OpenCV_DIR=$HOME/code/opencv/build
 	cd ~/ros2_overlay_ws
 	colcon build --symlink-install
 	source ./install/local_setup.bash
- 	sudo mkdir -p /opt/openvino_toolkit
- 	sudo ln -sf ~/ros2_overlay_ws/src/ros2_openvino_toolkit /opt/openvino_toolkit/
+	sudo mkdir -p /opt/openvino_toolkit
+	sudo ln -sf ~/ros2_overlay_ws/src/ros2_openvino_toolkit /opt/openvino_toolkit/
 	```
+
 
 
 
