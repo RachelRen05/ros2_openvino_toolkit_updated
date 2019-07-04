@@ -5,7 +5,8 @@ The OpenVINO™ (Open visual inference and neural network optimization) toolkit 
 * Speeds up time to market via a library of functions and preoptimized kernels
 * Includes optimized calls for OpenCV and OpenVX*
 
-# Design Architecture and Logic Flow[guide](https://github.com/RachelRen05/ros2_openvino_toolkit_updated/blob/master/doc/Design_Architecture_and_logic_flow.md)
+# Design Architecture and Logic Flow
+Please refer to this [guide](https://github.com/RachelRen05/ros2_openvino_toolkit_updated/blob/master/doc/Design_Architecture_and_logic_flow.md) for details.
 
 # Supported Features
 ## Diversal Input Components
@@ -67,7 +68,8 @@ One-step installation scripts are provided for the dependencies' installation. P
 One-step installation scripts are provided for the dependencies' installation. Please see [the guide](https://github.com/RachelRen05/ros2_openvino_toolkit_updated/blob/master/doc/binary_version/BINARY_INSTALLATION.md) for details.
 
 ## Launching
-### set environment[guide](https://github.com/RachelRen05/ros2_openvino_toolkit_updated/blob/master/doc/SET_ENVIRONMENT.md)
+### set environment
+Please refer to this [guide](https://github.com/RachelRen05/ros2_openvino_toolkit_updated/blob/master/doc/SET_ENVIRONMENT.md) for details.
 ### Preparation
 * Configure the Neural Compute Stick USB Driver
    ```bash
