@@ -5,7 +5,7 @@ The OpenVINO™ (Open visual inference and neural network optimization) toolkit 
 * Speeds up time to market via a library of functions and preoptimized kernels
 * Includes optimized calls for OpenCV and OpenVX*
 
-# [Design Architecture and Logic Flow](https://github.com/RachelRen05/ros2_openvino_toolkit_updated/blob/master/doc/Design_Architecture_and_logic_flow.md)
+# Design Architecture and Logic Flow[guide](https://github.com/RachelRen05/ros2_openvino_toolkit_updated/blob/master/doc/Design_Architecture_and_logic_flow.md)
 
 # Supported Features
 ## Diversal Input Components
@@ -29,7 +29,7 @@ Currently, the inference feature list is supported:
 |Age & Gender Recognition| Age and gener recognition based on detected face image.|```/ros2_openvino_toolkit/age_genders_Recognition```([people_msgs:msg:AgeGenderStamped](https://github.com/intel/ros2_openvino_toolkit/blob/master/people_msgs/msg/AgeGenderStamped.msg))|
 |Head Pose Estimation| Head pose estimation based on detected face image.|```/ros2_openvino_toolkit/headposes_estimation```([people_msgs:msg:HeadPoseStamped](https://github.com/intel/ros2_openvino_toolkit/blob/master/people_msgs/msg/HeadPoseStamped.msg))|
 |Object Detection| object detection based on SSD-based trained models.|```/ros2_openvino_toolkit/detected_objects```([object_msgs::msg::ObjectsInBoxes](https://github.com/intel/ros2_object_msgs/blob/master/msg/ObjectsInBoxes.msg))|
-|Vehicle Detection| Vehicle and license detection based on Intel models.|```/ros2_openvino_toolkit//ros2_openvino_toolkit/detected_vehicles_attribs```([people_msgs::msg::VehicleAttribsStamped](https://github.com/intel/ros2_openvino_toolkit/blob/devel/people_msgs/msg/VehicleAttribsStamped.msg))```/ros2_openvino_toolkit/detected_license_plates```([people_msgs::msg::LicensePlateStamped](https://github.com/intel/ros2_openvino_toolkit/blob/devel/people_msgs/msg/LicensePlateStamped.msg))|
+|Vehicle Detection| Vehicle and license detection based on Intel models.|```/ros2_openvino_toolkit/detected_vehicles_attribs```([people_msgs::msg::VehicleAttribsStamped](https://github.com/intel/ros2_openvino_toolkit/blob/devel/people_msgs/msg/VehicleAttribsStamped.msg))```/ros2_openvino_toolkit/detected_license_plates```([people_msgs::msg::LicensePlateStamped](https://github.com/intel/ros2_openvino_toolkit/blob/devel/people_msgs/msg/LicensePlateStamped.msg))|
 |Object Segmentation| object detection and segmentation.|```/ros2_openvino_toolkit/segmented_obejcts```([people_msgs::msg::ObjectsInMasks](https://github.com/intel/ros2_openvino_toolkit/blob/devel/people_msgs/msg/ObjectsInMasks.msg))|
 |Person Reidentification| Person Reidentification based on object detection.|```/ros2_openvino_toolkit/reidentified_persons```([people_msgs::msg::ReidentificationStamped](https://github.com/intel/ros2_openvino_toolkit/blob/devel/people_msgs/msg/ReidentificationStamped.msg))|
 
@@ -67,7 +67,7 @@ One-step installation scripts are provided for the dependencies' installation. P
 One-step installation scripts are provided for the dependencies' installation. Please see [the guide](https://github.com/RachelRen05/ros2_openvino_toolkit_updated/blob/master/doc/binary_version/BINARY_INSTALLATION.md) for details.
 
 ## Launching
-## [set environment](https://github.com/RachelRen05/ros2_openvino_toolkit_updated/blob/master/doc/SET_ENVIRONMENT.md)
+### set environment[guide](https://github.com/RachelRen05/ros2_openvino_toolkit_updated/blob/master/doc/SET_ENVIRONMENT.md)
 ### Preparation
 * Configure the Neural Compute Stick USB Driver
    ```bash
